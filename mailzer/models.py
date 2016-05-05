@@ -2,6 +2,7 @@ import json
 import sys
 from datetime import timedelta
 
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
@@ -120,7 +121,7 @@ class MailTemplate(models.Model):
     admin_preview.short_description = 'Preview'
     admin_preview.allow_tags = True
 
-    def enqueue(self, to_addr, from_addr=None, **kwargs):
+    def enqueue(self, to_addr, from_addr=settings.DEFAULT_FROM_EMAIL, **kwargs):
         QueuedMail.objects.create(mail_to=to_addr, mail_from=from_addr,
                                   template=self, context_vars=json.dumps(pack_objects(kwargs)))
 
